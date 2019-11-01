@@ -1,0 +1,7 @@
+
+{
+  "dynalink": {
+    "origin": "./lib/**（当前 package 编译好的文件地址）",
+    "linkto": "../../../xxx-service/node_modules/@my-package/lib/（将编译好的文件拷贝至...）"
+  }
+}

@@ -109,32 +109,46 @@ end
 ### 一键启动/暂停应用
 
 ```lua
--- 一键(开启/关闭)(微信/钉钉/Chrome/Safari)
+-- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/词典/VSCode)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
   local dingApp = hs.application.find('钉钉')
   local wechatApp = hs.application.find('微信')
-  local infoText = 'Launching Apps...今天也要加油鸭～'
+  local dictApp = hs.application.find('词典')
+  local safariApp = hs.application.find('Safari')
+  local chromeApp = hs.application.find('Google Chrome')
+  local itermApp = hs.application.find('iTerm')
+  local codeApp = hs.application.find('Code')
 
-  if dingApp then
-      dingApp:kill()
-      infoText = 'Shutting down Apps...下班噜～'
+  -- 通过 safari 判断是启动还是关闭应用，因为 safari 是一定会打开的应用。
+  -- 每个人习惯不同，可以任意配置一个你认为重要的应用
+  if safariApp then
+      hs.alert('Shutting down Apps...下班噜～')
+      kill_all_applications({ codeApp, dingApp, wechatApp, dictApp, safariApp, chromeApp, itermApp })
+      timerForHaveARest:stop()
   else
-      hs.application.launchOrFocus('dingtalk')
+      hs.alert('Launching Apps...今天也要加油鸭～')
+      launch_all_applications({ 'dingtalk', 'wechat', 'dictionary', 'Safari', 'Google Chrome', 'iTerm' })
+      timerForHaveARest:start()
   end
-
-  hs.alert(infoText)
-
-  if wechatApp then
-      wechatApp:kill()
-  else
-      hs.application.launchOrFocus('wechat')
-  end
-
-  toggle_application_run('Safari')
-  toggle_application_run('Google Chrome')
 
 end)
+
+-- 关闭多个应用
+function kill_all_applications(appTable)
+    for key,value in pairs(appTable) do
+        if value then
+            value:kill()
+        end
+    end
+end
+
+-- 启动多个应用
+function launch_all_applications(appTableString)
+  for key,value in pairs(appTableString) do
+      hs.application.launchOrFocus(value)
+  end
+end
 ```
 
 这里很奇怪，因为有些应用的启动和暂停使用的字符串并不一样，比如微信和钉钉。`launchOrFocus` 方法的参数如果选择“微信”，其实是无法正确启动的。

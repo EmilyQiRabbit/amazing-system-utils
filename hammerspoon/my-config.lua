@@ -8,6 +8,7 @@ local key2AppWindow_Cmd = {
     i = 'iTerm',
     o = 'Code',
     l = '访达',
+    u = '词典'
 }
 local key2AppWindow_Control = {}
 
@@ -39,57 +40,77 @@ end)
 
 -- 开始计时
 hs.hotkey.bind(hyperControl, 't', function()
-  hs.alert('开始专注了 🌸今天也要加油鸭')
+  hs.alert('开始专注了 🌸 今天也要加油鸭')
   timerForHaveARest:start()
 end)
 
--- 一键(开启/关闭)(微信/钉钉/Chrome/Safari)
+-- 测试按键
+-- hs.hotkey.bind(hyperControl, 'e', function()
+--   local dictApp = hs.application.find('词典')
+--   if dictApp then
+--       dictApp:kill()
+--   else
+--       hs.application.launchOrFocus('dictionary')
+--   end
+-- end)
+
+-- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/词典/VSCode)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
   local dingApp = hs.application.find('钉钉')
   local wechatApp = hs.application.find('微信')
-  local infoText = 'Launching Apps...今天也要加油鸭～'
+  local dictApp = hs.application.find('词典')
+  local safariApp = hs.application.find('Safari')
+  local chromeApp = hs.application.find('Google Chrome')
+  local itermApp = hs.application.find('iTerm')
+  local codeApp = hs.application.find('Code')
 
-  if dingApp then
-      dingApp:kill()
+  -- 通过 safari 判断是启动还是关闭应用，因为 safari 是一定会打开的应用
+  if safariApp then
+      hs.alert('Shutting down Apps...下班噜～')
+      kill_all_applications({ codeApp, dingApp, wechatApp, dictApp, safariApp, chromeApp, itermApp })
       timerForHaveARest:stop()
-      infoText = 'Shutting down Apps...下班噜～'
   else
+      hs.alert('Launching Apps...今天也要加油鸭～')
+      launch_all_applications({ 'dingtalk', 'wechat', 'dictionary', 'Safari', 'Google Chrome', 'iTerm' })
       timerForHaveARest:start()
-      hs.application.launchOrFocus('dingtalk')
   end
-
-  hs.alert(infoText)
-
-  if wechatApp then
-      wechatApp:kill()
-  else
-      hs.application.launchOrFocus('wechat')
-  end
-
-  toggle_application_run('Safari')
-  toggle_application_run('Google Chrome')
 
 end)
 
 -- 列表循环
-
-for key,value in pairs(key2AppRun)  do
+for key,value in pairs(key2AppRun) do
     hs.hotkey.bind(hyperCmd, key, function()
        toggle_application_run(value)
     end)
 end
 
-for key,value in pairs(key2AppWindow_Cmd)  do
+for key,value in pairs(key2AppWindow_Cmd) do
     hs.hotkey.bind(hyperCmd, key, function()
         toggle_application_window(value)
     end)
 end
 
-for key,value in pairs(key2AppWindow_Control)  do
+for key,value in pairs(key2AppWindow_Control) do
   hs.hotkey.bind(hyperControl, key, function()
       toggle_application_window(value)
   end)
+end
+
+-- 关闭多个应用
+function kill_all_applications(appTable)
+    for key,value in pairs(appTable) do
+        if value then
+            value:kill()
+        end
+    end
+end
+
+-- 启动多个应用
+function launch_all_applications(appTableString)
+  for key,value in pairs(appTableString) do
+      hs.application.launchOrFocus(value)
+  end
 end
 
 -- Toggle an application between launch and kill

@@ -27,6 +27,22 @@ hs.alert.defaultStyle.fillColor = { white = 0.05, alpha = 0.75 }
 hs.alert.defaultStyle.radius = 10
 hs.alert.defaultStyle.textColor = { hex = '#FAD94A', alpha = 0.75 }
 
+-- 订制 style
+local timerStyle = {
+  textSize = 75
+}
+-- 定时提醒
+local timerForHaveARest = hs.timer.new(60*50, function()
+  hs.alert.show('嗨 🌸 休息、休息一下 🎉', timerStyle, hs.screen.mainScreen(), 10)
+  timerForHaveARest:stop()
+end)
+
+-- 开始计时
+hs.hotkey.bind(hyperControl, 't', function()
+  hs.alert('开始专注了 🌸今天也要加油鸭')
+  timerForHaveARest:start()
+end)
+
 -- 一键(开启/关闭)(微信/钉钉/Chrome/Safari)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
@@ -36,8 +52,10 @@ hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
   if dingApp then
       dingApp:kill()
+      timerForHaveARest:stop()
       infoText = 'Shutting down Apps...下班噜～'
   else
+      timerForHaveARest:start()
       hs.application.launchOrFocus('dingtalk')
   end
 
@@ -120,13 +138,3 @@ function toggle_application_window(_app)
     	end
     end
 end
-
--- style
-local timerStyle = {
-  textSize = 75
-}
-
-local timeToDrinkSomeWater = hs.timer.doEvery(60*50, function()
-  hs.alert.show('嗨 🌸 休息、休息一下 🎉', timerStyle, hs.screen.mainScreen(), 10)
-end)
-

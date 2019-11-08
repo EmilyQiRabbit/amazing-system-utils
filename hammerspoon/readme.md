@@ -142,14 +142,42 @@ end)
 ### 定时休息
 
 ```lua
--- style
+-- 订制 style
 local timerStyle = {
   textSize = 75
 }
-
-local timeToDrinkSomeWater = hs.timer.doEvery(60*50, function()
+-- 定时提醒
+local timerForHaveARest = hs.timer.new(60*50, function()
   hs.alert.show('嗨 🌸 休息、休息一下 🎉', timerStyle, hs.screen.mainScreen(), 10)
+  timerForHaveARest:stop()
+end)
+
+-- 开始计时
+hs.hotkey.bind(hyperControl, 't', function()
+  hs.alert('开始专注了 🌸今天也要加油鸭')
+  timerForHaveARest:start()
 end)
 ```
 
-每 50 分钟，会提醒程序猿小姐姐我休息一下 🙋～
+每 50 分钟，会提醒休息 🙌～
+
+在休息完成后点击 ctrl + t 开始新一轮的专注～
+
+### 鼠标移动
+
+之前使用双屏的时候，鼠标从一个屏幕上移动到另一个总是很麻烦，滑动来滑动去的
+
+这段代码通过「cmd + `」组合将鼠标直接从当前所处屏幕移动到另一个屏幕中央
+
+```lua
+local hyperCmd = {'cmd'}
+
+hs.hotkey.bind(hyperCmd, '`', function()
+    local screen = hs.mouse.getCurrentScreen()
+    local nextScreen = screen:next()
+    local rect = nextScreen:fullFrame()
+    local center = hs.geometry.rectMidPoint(rect)
+ 
+    hs.mouse.setAbsolutePosition(center)
+end)
+```

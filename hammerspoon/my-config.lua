@@ -8,7 +8,6 @@ local key2AppWindow_Cmd = {
     i = 'iTerm',
     o = 'Code',
     l = '访达',
-    u = '词典'
 }
 local key2AppWindow_Control = {}
 
@@ -46,20 +45,30 @@ end)
 
 -- 测试按键
 -- hs.hotkey.bind(hyperControl, 'e', function()
---   local dictApp = hs.application.find('词典')
---   if dictApp then
---       dictApp:kill()
---   else
---       hs.application.launchOrFocus('dictionary')
---   end
+--     switch_applications_to_full_screen({ 'Google Chrome' })
 -- end)
 
--- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/词典/VSCode)
+local SafariWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
+  if appName == 'Safari浏览器' then
+      if eventType == hs.application.watcher.launched then
+          -- safari 全屏
+          switch_applications_to_full_screen({ 'Safari' })
+      end
+  end
+  if appName == 'Google Chrome' then
+      if eventType == hs.application.watcher.launched then
+          -- Google Chrome 全屏
+          switch_applications_to_full_screen({ 'Google Chrome' })
+      end
+  end
+end)
+
+-- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/VSCode)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
   local dingApp = hs.application.find('钉钉')
   local wechatApp = hs.application.find('微信')
-  local dictApp = hs.application.find('词典')
+  -- local dictApp = hs.application.find('词典')
   local safariApp = hs.application.find('Safari')
   local chromeApp = hs.application.find('Google Chrome')
   local itermApp = hs.application.find('iTerm')
@@ -68,11 +77,13 @@ hs.hotkey.bind({"shift", "ctrl"}, '`', function()
   -- 通过 safari 判断是启动还是关闭应用，因为 safari 是一定会打开的应用
   if safariApp then
       hs.alert('Shutting down Apps...下班噜～')
-      kill_all_applications({ codeApp, dingApp, wechatApp, dictApp, safariApp, chromeApp, itermApp })
+      kill_all_applications({ codeApp, dingApp, wechatApp, safariApp, chromeApp, itermApp })
       timerForHaveARest:stop()
+      SafariWatcher:stop()
   else
       hs.alert('Launching Apps...今天也要加油鸭～')
-      launch_all_applications({ 'dingtalk', 'wechat', 'dictionary', 'Safari', 'Google Chrome', 'iTerm' })
+      SafariWatcher:start()
+      launch_all_applications({ 'Safari', 'dingtalk', 'wechat', 'Google Chrome', 'iTerm' })
       timerForHaveARest:start()
   end
 
@@ -113,6 +124,16 @@ function launch_all_applications(appTableString)
   end
 end
 
+-- 应用全屏
+function switch_applications_to_full_screen(appTableString)
+  for key,value in pairs(appTableString) do
+      local app = hs.application.find(value)
+      if app then
+          app:mainWindow():setFullScreen(true)
+      end
+  end
+end
+
 -- Toggle an application between launch and kill
 function toggle_application_run(_app)
     -- finds a running applications
@@ -139,7 +160,7 @@ function toggle_application_window(_app)
 
     -- application running, toggle hide/unhide
     if app then
-	local mainwin = app:mainWindow()
+	      local mainwin = app:mainWindow()
         if mainwin then
         		if true == app:isFrontmost() then
             		mainwin:application():hide()
@@ -148,14 +169,14 @@ function toggle_application_window(_app)
             		mainwin:application():unhide()
             		mainwin:focus()
         		end
-    	else
-	        -- no windows, maybe hide
-       		 if true == app:hide() then
-            		-- focus app
-            		application.launchOrFocus(_app)
-        		else
-            		-- nothing to do
-        		end
-    	end
+    	  else
+            -- no windows, maybe hide
+            if true == app:hide() then
+                -- focus app
+                application.launchOrFocus(_app)
+            else
+                -- nothing to do
+            end
+    	  end
     end
 end

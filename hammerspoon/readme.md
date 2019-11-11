@@ -1,4 +1,4 @@
-# Hammerspoon
+# Hammerspoon 一时爽，一直 Hammerspoon 一直爽
 
 👉[戳此进入官网](http://www.hammerspoon.org)
 

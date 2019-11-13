@@ -45,8 +45,25 @@ end)
 
 -- 测试按键
 -- hs.hotkey.bind(hyperControl, 'e', function()
---     switch_applications_to_full_screen({ 'Google Chrome' })
+--     -- 钉钉 微信的布局修改
+--     local app = hs.application.find('钉钉')
+--     if app then
+--         app:mainWindow():move({510, 0, 900, 800})
+--     end
 -- end)
+
+-- 调整应用窗口位置：ctrl + r
+hs.hotkey.bind(hyperControl, 'r', function()
+  -- 钉钉 微信的布局修改
+  local dingApp = hs.application.find('钉钉')
+  if dingApp then
+      dingApp:mainWindow():move({510, 0, 900, 800})
+  end
+  local wechatApp = hs.application.find('微信')
+  if wechatApp then
+      wechatApp:mainWindow():move({510, 0, 900, 800})
+  end
+end)
 
 local SafariWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
   if appName == 'Safari浏览器' then
@@ -55,12 +72,13 @@ local SafariWatcher = hs.application.watcher.new(function(appName, eventType, ap
           switch_applications_to_full_screen({ 'Safari' })
       end
   end
-  if appName == 'Google Chrome' then
-      if eventType == hs.application.watcher.launched then
-          -- Google Chrome 全屏
-          switch_applications_to_full_screen({ 'Google Chrome' })
-      end
-  end
+  -- 谷歌浏览器的全屏操作存在问题，暂时取消这一步
+  -- if appName == 'Google Chrome' then
+  --     if eventType == hs.application.watcher.launched then
+  --         -- Google Chrome 全屏
+  --         switch_applications_to_full_screen({ 'Google Chrome' })
+  --     end
+  -- end
 end)
 
 -- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/VSCode)

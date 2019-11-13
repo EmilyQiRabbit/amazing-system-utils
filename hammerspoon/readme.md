@@ -201,3 +201,22 @@ hs.hotkey.bind(hyperCmd, '`', function()
     hs.mouse.setAbsolutePosition(center)
 end)
 ```
+
+### 控制应用窗口位置
+
+强迫症福音：钉钉 and 微信都要整整齐齐的放在屏幕最上边！🙋‍♀️
+
+```lua
+-- 调整应用窗口位置：ctrl + r
+hs.hotkey.bind(hyperControl, 'r', function()
+    -- 钉钉 微信的布局修改
+    local dingApp = hs.application.find('钉钉')
+    if dingApp then
+        dingApp:mainWindow():move({510, 0, 900, 800})
+    end
+    local wechatApp = hs.application.find('微信')
+    if wechatApp then
+        wechatApp:mainWindow():move({510, 0, 900, 800})
+    end
+end)
+```

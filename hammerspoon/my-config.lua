@@ -7,7 +7,6 @@ local key2AppRun = {
 local key2AppWindow_Cmd = {
     i = 'iTerm',
     o = 'Code',
-    l = '访达',
 }
 local key2AppWindow_Control = {}
 
@@ -32,9 +31,9 @@ local timerStyle = {
   textSize = 75
 }
 -- 定时提醒
-local timerForHaveARest = hs.timer.new(60*50, function()
+local timerForHaveARest = hs.timer.new(60*55, function()
   hs.alert.show('嗨 🌸 休息、休息一下 🎉', timerStyle, hs.screen.mainScreen(), 10)
-  timerForHaveARest:stop()
+  -- timerForHaveARest:stop()
 end)
 
 -- 开始计时
@@ -54,15 +53,15 @@ end)
 
 -- 调整应用窗口位置：ctrl + r
 hs.hotkey.bind(hyperControl, 'r', function()
-  -- 钉钉 微信的布局修改
-  local dingApp = hs.application.find('钉钉')
-  if dingApp then
-      dingApp:mainWindow():move({510, 0, 900, 800})
-  end
-  local wechatApp = hs.application.find('微信')
-  if wechatApp then
-      wechatApp:mainWindow():move({510, 0, 900, 800})
-  end
+    -- 钉钉 微信的布局修改
+    local dingApp = hs.application.find('钉钉')
+    if dingApp then
+        dingApp:mainWindow():move({510, 0, 900, 1000})
+    end
+    local wechatApp = hs.application.find('微信')
+    if wechatApp then
+        wechatApp:mainWindow():move({510, 0, 900, 1000})
+    end
 end)
 
 local SafariWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
@@ -79,6 +78,20 @@ local SafariWatcher = hs.application.watcher.new(function(appName, eventType, ap
   --         switch_applications_to_full_screen({ 'Google Chrome' })
   --     end
   -- end
+end)
+
+-- finder show
+hs.hotkey.bind({"shift", "ctrl"}, 'l', function()
+  local finderApp = hs.application.find('访达')
+  if finderApp then
+      local mainwin = finderApp:mainWindow()
+      if mainwin then
+          hs.alert('show finder')
+          mainwin:application():activate(true)
+          mainwin:application():unhide()
+          mainwin:focus()
+      end
+  end
 end)
 
 -- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/VSCode)
@@ -99,7 +112,6 @@ hs.hotkey.bind({"shift", "ctrl"}, '`', function()
       timerForHaveARest:stop()
       SafariWatcher:stop()
   else
-      hs.alert('Launching Apps...今天也要加油鸭～')
       SafariWatcher:start()
       launch_all_applications({ 'Safari', 'dingtalk', 'wechat', 'Google Chrome', 'iTerm' })
       timerForHaveARest:start()
@@ -181,10 +193,10 @@ function toggle_application_window(_app)
 	      local mainwin = app:mainWindow()
         if mainwin then
         		if true == app:isFrontmost() then
-            		mainwin:application():hide()
+                app:hide()
         		else
-            		mainwin:application():activate(true)
-            		mainwin:application():unhide()
+                app:activate(true)
+            		app:unhide()
             		mainwin:focus()
         		end
     	  else

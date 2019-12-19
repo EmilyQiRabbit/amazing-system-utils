@@ -84,12 +84,11 @@ end)
 hs.hotkey.bind({"shift", "ctrl"}, 'l', function()
   local finderApp = hs.application.find('访达')
   if finderApp then
-      local mainwin = finderApp:mainWindow()
-      if mainwin then
-          hs.alert('show finder')
-          mainwin:application():activate(true)
-          mainwin:application():unhide()
-          mainwin:focus()
+      local allWins = finderApp:allWindows()
+      if allWins[1] then
+          finderApp:activate(true)
+          finderApp:unhide()
+          allWins[1]:focus()
       end
   end
 end)

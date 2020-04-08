@@ -50,11 +50,11 @@ git remote set-url origin xxx
 
 git config --global credential.helper store
 
-    这一步会在用户目录下的.gitconfig文件最后添加 credential
+    这一步会在用户目录下的 .gitconfig 文件最后添加 credential
 
 再次 push 并输入密码
 
-    这一步会在用户目录下生成文件.git-credential 记录用户名密码的信息
+    这一步会在用户目录下生成文件 .git-credential 记录用户名密码的信息
 
 ## 8. git 更新 fork 仓库的代码
 
@@ -87,11 +87,13 @@ git revert B^..D 
 ```
 这样就把 B，C，D 都给 revert 了，变成：
 
-A-> B ->C -> D -> D'-> C' -> B'
+A -> B -> C -> D -> D' -> C' -> B'
 
 用法就是：
 
+```
 git revert OLDER_COMMIT^..NEWER_COMMIT
+```
 
 如果我们想把这三个revert不自动生成三个新的commit，而是用一个commit完成，可以这样：
 

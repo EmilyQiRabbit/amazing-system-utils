@@ -7,8 +7,11 @@ local key2AppRun = {
 local key2AppWindow_Cmd = {
     i = 'iTerm',
     o = 'Code',
+    t = 'To Do'
 }
-local key2AppWindow_Control = {}
+local key2AppWindow_Control = {
+  x = 'XMind'
+}
 
 -- 切换屏幕时鼠标瞬移
 -- hs.hotkey.bind(hyperCmd, '`', function()
@@ -28,11 +31,11 @@ hs.alert.defaultStyle.textColor = { hex = '#FAD94A', alpha = 0.75 }
 
 -- 订制 style
 local timerStyle = {
-  textSize = 75
+  textSize = 35
 }
 -- 定时提醒
 local timerForHaveARest = hs.timer.new(60*55, function()
-  hs.alert.show('嗨 🌸 休息、休息一下 🎉', timerStyle, hs.screen.mainScreen(), 10)
+  hs.alert.show('🌸 休息一下 🌸', timerStyle, hs.screen.mainScreen(), 5)
   -- timerForHaveARest:stop()
 end)
 
@@ -44,75 +47,84 @@ end)
 
 -- 测试按键
 -- hs.hotkey.bind(hyperControl, 'e', function()
---     -- 钉钉 微信的布局修改
---     local app = hs.application.find('钉钉')
---     if app then
---         app:mainWindow():move({510, 0, 900, 800})
---     end
+    
 -- end)
 
 -- 调整应用窗口位置：ctrl + r
 hs.hotkey.bind(hyperControl, 'r', function()
     -- 钉钉 微信的布局修改
-    local dingApp = hs.application.find('钉钉')
-    if dingApp then
-        dingApp:mainWindow():move({510, 0, 900, 1000})
-    end
+    -- local dingApp = hs.application.find('钉钉')
+    -- if dingApp then
+    --     dingApp:mainWindow():move({475, 0, 975, 950})
+    -- end
     local wechatApp = hs.application.find('微信')
     if wechatApp then
-        wechatApp:mainWindow():move({510, 0, 900, 1000})
+        wechatApp:mainWindow():move({550, 0, 835, 950})
     end
 end)
 
-local SafariWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
-  if appName == 'Safari浏览器' then
-      if eventType == hs.application.watcher.launched then
-          -- safari 全屏
-          switch_applications_to_full_screen({ 'Safari' })
-      end
-  end
-  -- 谷歌浏览器的全屏操作存在问题，暂时取消这一步
-  -- if appName == 'Google Chrome' then
-  --     if eventType == hs.application.watcher.launched then
-  --         -- Google Chrome 全屏
-  --         switch_applications_to_full_screen({ 'Google Chrome' })
-  --     end
-  -- end
-end)
+-- local SafariWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
+--   if appName == 'Safari浏览器' then
+--       if eventType == hs.application.watcher.launched then
+--           -- safari 全屏
+--           switch_applications_to_full_screen({ 'Safari' })
+--       end
+--   end
+--   -- 谷歌浏览器的全屏操作存在问题，暂时取消这一步
+--   if appName == 'Google Chrome' then
+--       if eventType == hs.application.watcher.launched then
+--           -- Google Chrome 全屏
+--           switch_applications_to_full_screen({ 'Google Chrome' })
+--       end
+--   end
+-- end)
 
 -- finder show
 hs.hotkey.bind({"shift", "ctrl"}, 'l', function()
-  local finderApp = hs.application.find('访达')
-  if finderApp then
-      local allWins = finderApp:allWindows()
-      if allWins[1] then
-          finderApp:activate(true)
-          finderApp:unhide()
-          allWins[1]:focus()
-      end
-  end
+    local finderApp = hs.application.find('访达')
+    if finderApp then
+        local allWins = finderApp:allWindows()
+        if allWins[1] then
+            finderApp:activate(true)
+            finderApp:unhide()
+            allWins[1]:focus()
+        end
+    end
+end)
+
+-- To Do show
+hs.hotkey.bind({"shift", "ctrl"}, 't', function()
+    local todoApp = hs.application.find('To Do')
+    if todoApp then
+        local allWins = todoApp:allWindows()
+        if allWins[1] then
+            todoApp:activate(true)
+            todoApp:unhide()
+            allWins[1]:focus()
+        end
+    end
 end)
 
 -- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/VSCode)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
-  local dingApp = hs.application.find('钉钉')
+  -- local dingApp = hs.application.find('钉钉') dingtalk
   local wechatApp = hs.application.find('微信')
   -- local dictApp = hs.application.find('词典')
-  local safariApp = hs.application.find('Safari')
+  -- local safariApp = hs.application.find('Safari')
   local chromeApp = hs.application.find('Google Chrome')
   local itermApp = hs.application.find('iTerm')
   local codeApp = hs.application.find('Code')
 
-  -- 通过 safari 判断是启动还是关闭应用，因为 safari 是一定会打开的应用
-  if safariApp then
+  -- 通过 chrome 判断是启动还是关闭应用，因为 chrome 是一定会打开的应用
+  if chromeApp then
       hs.alert('Shutting down Apps...下班噜～')
-      kill_all_applications({ codeApp, dingApp, wechatApp, safariApp, chromeApp, itermApp })
+      kill_all_applications({ codeApp, wechatApp, chromeApp, itermApp })
       timerForHaveARest:stop()
-      SafariWatcher:stop()
+      -- SafariWatcher:stop()
   else
-      SafariWatcher:start()
-      launch_all_applications({ 'Safari', 'dingtalk', 'wechat', 'Google Chrome', 'iTerm' })
+      -- SafariWatcher:start()
+      launch_all_applications({ 'wechat', 'Google Chrome', 'iTerm' })
       timerForHaveARest:start()
   end
 

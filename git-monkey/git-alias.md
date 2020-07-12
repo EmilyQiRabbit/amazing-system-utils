@@ -1,8 +1,14 @@
-## git alias config
+## .zshrc config
 
 日常偷懒 😏
 
 ```sh
+plugins=(
+  git
+  autojump
+  zsh-syntax-highlighting
+)
+
 _glm() {
   git log --grep="$1"
 }
@@ -21,25 +27,42 @@ _gpull() {
   git pull --rebase origin ${br/* /}
 }
 
-alias gpull=_gpull # 自动拉取 origin 同名分支
-alias gpush=_gpush # 自动推送到 origin 同名分支
-alias glo="git log --graph --decorate --oneline"
-alias gla=_gla
-alias glm=_glm
-# 删除除了 release 的所有分支
-alias gitb-d-all="git branch | grep -v 'release' | xargs git branch -D"
-# 在打开 chrome 某网址，例如：chrome https://baidu.com
-alias chrome="open -a 'Google Chrome'"
+_gpushf() {
+  br=`git branch | grep "*"`
+  git push -f origin ${br/* /}
+}
 
-# 其他偷懒命令...
+_fdesc() {
+  echo "/**\n * "$1" \n * @desc \n * @auther liuyuqi \n * @date $(date +%Y-%m-%d)\n*/" >> "$1"
+}
+
+alias gpull=_gpull
 alias gitc-b="git checkout -b"
 alias gitc="git checkout"
-alias gpush-f="git push -f origin"
+alias gpush=_gpush # 自动推送到 origin 同名分支
+alias gpush-f=_gpushf
 alias gitcp="git cherry-pick"
 alias gitb="git branch"
 alias gits="git status"
+alias glo="git log --graph --decorate --oneline"
+alias gla=_gla
+alias glm=_glm
+alias fdesc=_fdesc
 alias cc="code ."
+alias dst="NODE_DEVTOOL= npm start"
 alias nst="npm start"
+alias ccn="code .;npm start"
+alias npmi="npm install"
 alias yi="yarn install"
 alias gcommit="git add .;git commit -m"
+alias gcommit-nv="git add .;git commit --no-verify -m"
+alias getIndex="python ~/toc.py"
+alias chrome="open -a 'Google Chrome'"
+alias ip-addr="ifconfig | grep inet | grep -v inet6 | grep -v 127"
+alias prew="prettier --write"
+alias github-config="git config user.name EmilyQiRabbit;git config user.email LiuYQEmily@163.com"
+# 删除除了 test 的所有分支
+alias gitb-d-all="git branch | grep -v 'test' | xargs git branch -D"
+alias gcl0="git clean -d -n"
+alias gcl1="git clean -d -f"
 ```

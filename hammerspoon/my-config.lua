@@ -10,7 +10,8 @@ local key2AppWindow_Cmd = {
     t = 'To Do'
 }
 local key2AppWindow_Control = {
-  x = 'XMind'
+  x = 'XMind',
+  q = '大象'
 }
 
 -- 切换屏幕时鼠标瞬移
@@ -35,13 +36,13 @@ local timerStyle = {
 }
 -- 定时提醒
 local timerForHaveARest = hs.timer.new(60*55, function()
-  hs.alert.show('🌸 休息一下 🌸', timerStyle, hs.screen.mainScreen(), 5)
+  hs.alert.show('🌸 Take a break 🌸', timerStyle, hs.screen.mainScreen(), 5)
   -- timerForHaveARest:stop()
 end)
 
 -- 开始计时
 hs.hotkey.bind(hyperControl, 't', function()
-  hs.alert('开始专注了 🌸 今天也要加油鸭')
+  hs.alert('🌸 今天也要加油鸭 🌸')
   timerForHaveARest:start()
 end)
 
@@ -52,14 +53,14 @@ end)
 
 -- 调整应用窗口位置：ctrl + r
 hs.hotkey.bind(hyperControl, 'r', function()
-    -- 钉钉 微信的布局修改
-    -- local dingApp = hs.application.find('钉钉')
-    -- if dingApp then
-    --     dingApp:mainWindow():move({475, 0, 975, 950})
-    -- end
+    -- 大象 微信的布局修改
+    local dxApp = hs.application.find('大象')
+    if dxApp then
+        dxApp:mainWindow():move({500, 0, 1048, 950})
+    end
     local wechatApp = hs.application.find('微信')
     if wechatApp then
-        wechatApp:mainWindow():move({550, 0, 835, 950})
+        wechatApp:mainWindow():move({606, 0, 835, 950})
     end
 end)
 
@@ -108,7 +109,7 @@ end)
 -- 一键(开启/关闭)(微信/钉钉/Chrome/Safari/iTerm/VSCode)
 hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
-  -- local dingApp = hs.application.find('钉钉') dingtalk
+  local dxApp = hs.application.find('大象')
   local wechatApp = hs.application.find('微信')
   -- local dictApp = hs.application.find('词典')
   -- local safariApp = hs.application.find('Safari')
@@ -118,13 +119,13 @@ hs.hotkey.bind({"shift", "ctrl"}, '`', function()
 
   -- 通过 chrome 判断是启动还是关闭应用，因为 chrome 是一定会打开的应用
   if chromeApp then
-      hs.alert('Shutting down Apps...下班噜～')
-      kill_all_applications({ codeApp, wechatApp, chromeApp, itermApp })
+      hs.alert('Shutting down Apps...')
+      kill_all_applications({ codeApp, wechatApp, chromeApp, itermApp, dxApp })
       timerForHaveARest:stop()
       -- SafariWatcher:stop()
   else
       -- SafariWatcher:start()
-      launch_all_applications({ 'wechat', 'Google Chrome', 'iTerm' })
+      launch_all_applications({ 'wechat', 'Google Chrome', 'iTerm', '大象' })
       timerForHaveARest:start()
   end
 

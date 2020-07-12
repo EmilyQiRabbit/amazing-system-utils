@@ -9,3 +9,5 @@
 4. git monkey
    1. [git 常用命令](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/git-monkey/git.md)
    2. [git alias 配置](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/git-monkey/git-alias.md)
+
+5. [virustotal](https://developers.virustotal.com/v3.0/)：可用于检测安装包病毒

@@ -6,6 +6,8 @@ const fs = require("fs-extra");
 const fetch = require("node-fetch");
 const path = require("path");
 const FormData = require("form-data");
+const crypto = require("crypto");
+const logger = require("./logger");
 
 // 安装包所处文件
 const defaultPath = "./release";
@@ -14,118 +16,127 @@ const defaultPath = "./release";
 const getUploadUrl = "https://www.virustotal.com/api/v3/files/upload_url";
 const getAnalyseUrl = (id) =>
   `https://www.virustotal.com/api/v3/analyses/${id}`;
-// 需要 virus 账号生成 api key 后方可使用接口上传文件进行检测
+// 需要使用 virus 账号生成 api key，然后方可使用接口上传文件进行检测
 const virusAPIKey = "********";
+
+const fileHashAlgorithm = 'sha256';
 
 function isStatsCanPass(analyseStats) {
   const { malicious, suspicious } = analyseStats;
   return !malicious && !suspicious;
 }
 
+function getFileHash(path) {
+  const buffer = fs.readFileSync(path);
+  const fsHash = crypto.createHash(fileHashAlgorithm);
+  fsHash.update(buffer);
+  const sha256hash = fsHash.digest('hex');
+  return sha256hash;
+}
+
+function virusCheckSuccessLog() {
+  logger.setVirusCheckResult("\n【病毒检测】通过");
+  console.log(`【${new Date().toLocaleString()}】病毒检测已通过`);
+}
+
+function virusCheckErrorLog(error) {
+  logger.setVirusCheckResult(`\n【病毒检测】失败或未通过，错误信息：${error.message || error}`);
+  console.log(
+    `【${new Date().toLocaleString()}】病毒检测失败或未通过，错误信息：`,
+    error.message || error
+  );
+}
+
 function uploadAnalyse(file) {
-  console.log("file path:", file);
+  console.log(`【${new Date().toLocaleString()}】病毒检测开始...`);
+  console.log("检测文件地址：", file);
   // 获取 upload_url fetch
   return fetch(getUploadUrl, {
     method: "GET",
     headers: { "x-apikey": virusAPIKey },
   })
-    .then((res) => res.text())
+    .then((res) => res.json())
     .then((result) => {
-      console.log("fetch upload_url: ", JSON.parse(result).data);
-      let uploadAnalyseUrl = JSON.parse(result).data;
+      console.log("已获取到上传地址，开始上传...");
+      let uploadAnalyseUrl = result.data;
       const form = new FormData();
       form.append("file", fs.createReadStream(file));
       // 上传安装包 fetch
-      fetch(uploadAnalyseUrl, {
+      return fetch(uploadAnalyseUrl, {
         method: "POST",
         body: form,
         headers: { "x-apikey": virusAPIKey },
       })
-        .then((res) => res.text())
+        .then((res) => res.json())
         .then((result) => {
-          console.log(`virus analyseId: `, JSON.parse(result).data);
-          const analyseId = JSON.parse(result).data.id;
+          // console.log(`...virus analyseId fetched...`);
+          const analyseId = result.data.id;
           // 获取包的 analyse 数据 fetch
-          fetch(getAnalyseUrl(analyseId), {
-            method: "GET",
-            headers: { "x-apikey": virusAPIKey },
+          console.log("远端解析文件中，请稍等...");
+          return new Promise((resolve, reject) => {
+            const timer = setInterval(() => {
+              fetch(getAnalyseUrl(analyseId), {
+                method: "GET",
+                headers: { "x-apikey": virusAPIKey },
+              })
+                .then((res) => res.json())
+                .then((result) => {
+                  const {
+                    attributes: { status, stats },
+                  } = result.data;
+                  if (status === "completed") {
+                    clearInterval(timer);
+                    if (!isStatsCanPass(stats)) {
+                      const fileHash = getFileHash(file);
+                      reject(`[安装包存在风险项，请检查安装包: https://www.virustotal.com/gui/file/${fileHash}/detection]`);
+                    } else {
+                      resolve();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  reject(error);
+                })
+            }, 5000);
           })
-            .then((res) => res.text())
-            .then((result) => {
-              console.log(`virus analyse result: `, JSON.parse(result).data);
-              const {
-                attributes: { status, stats },
-              } = JSON.parse(result).data;
-              // 可能是分析没完成的状态，此时需要定时(5s)检查结果
-              if (status !== "completed") {
-                console.log("... analyse incompleted, retry...");
-                const timer = setInterval(() => {
-                  fetch(getAnalyseUrl(analyseId), {
-                    method: "GET",
-                    headers: { "x-apikey": virusAPIKey },
-                  })
-                    .then((res) => res.text())
-                    .then((result) => {
-                      console.log(
-                        `virus analyse result: `,
-                        JSON.parse(result).data
-                      );
-                      const {
-                        attributes: { status, stats },
-                      } = JSON.parse(result).data;
-                      if (status === "completed") {
-                        clearInterval(timer);
-                        if (!isStatsCanPass(stats)) {
-                          throw new Error(
-                            `病毒检测未通过，请检查安装包。病毒检测地址：https://www.virustotal.com/gui/home/upload`
-                          );
-                        }
-                      }
-                    });
-                }, 5000);
-              } else {
-                if (!isStatsCanPass(stats)) {
-                  throw new Error(
-                    `病毒检测未通过，请检查安装包。病毒检测地址：https://www.virustotal.com/gui/home/upload`
-                  );
-                }
-              }
-            })
-            .catch((error) => {
-              console.log(`get virus analyse error: `, error);
-              throw new Error(`get virus analyse error`);
-            });
-          // console.log(`virus check pass: file(${file})`);
+          .then(() => {
+            virusCheckSuccessLog();
+          })
+          .catch((error) => {
+            virusCheckErrorLog(error);
+          })
         })
-        .catch((error) => {
-          console.log(`Virus Check upload error:`, error);
-          throw new Error(`Virus Check upload error`);
-        });
     })
-    .catch((e) => {
-      console.log(`Virus check error:`, error);
-      return new Promise(function (_resolve, reject) {
-        reject(new Error(`Virus check error: ${e}`));
-      });
+    .catch((error) => {
+      virusCheckErrorLog(error);
     });
 }
 
 // 在目录 dir 下实用 filter 条件寻找 file
 function findFile(dir, filter) {
-  return fs.readdirSync(dir).find((file) => {
-    let filePath = path.join(dir, file);
+  return fs.readdirSync(dir)
+  .find(file => {
+    let filePath = path.join(dir, file)
     if (fs.statSync(filePath).isDirectory()) {
-      return false;
+      return false
     }
     return path.extname(file) === filter;
-  });
+  })
 }
 
 function upload(filter, dir = defaultPath) {
   return function upload() {
-    let releaseDir = path.join(__dirname, dir);
-    var file = findFile(releaseDir, filter);
-    return uploadAnalyse(path.resolve(releaseDir, file));
+    // 留一个可以跳过的入口
+    if (String(process.env.SKIP_CHECK) === '1') {
+      console.log("自动跳过病毒检测");
+      return new Promise(function (resolve) {
+        resolve();
+      });
+    } else {
+      let releaseDir = path.join(__dirname, dir);
+      var file = findFile(releaseDir, filter);
+      return uploadAnalyse(path.resolve(releaseDir, file));
+    }
   };
 }
 

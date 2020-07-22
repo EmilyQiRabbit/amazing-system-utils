@@ -24,3 +24,11 @@ VirusTotal 是一个免费的病毒、蠕虫、木马和各种恶意软件分析
 
 5. 或在文件上传完成后使用文件 hash 访问地址：
 https://www.virustotal.com/gui/file/${fileHash}/detection 可获取可视化结果。
+
+6. 也可根据 analyseId，并使用命令行的方式获取文件解析结果：
+
+```bash
+curl --request GET \
+  --url https://www.virustotal.com/api/v3/analyses/{analyseId} \
+  --header 'x-apikey: <your API key>'
+```

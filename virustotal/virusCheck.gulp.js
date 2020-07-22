@@ -73,8 +73,9 @@ function uploadAnalyse(file) {
           const analyseId = result.data.id;
           // 获取包的 analyse 数据 fetch
           console.log("远端解析文件中，请稍等...");
+          let timer;
           return new Promise((resolve, reject) => {
-            const timer = setInterval(() => {
+            timer = setInterval(() => {
               fetch(getAnalyseUrl(analyseId), {
                 method: "GET",
                 headers: { "x-apikey": virusAPIKey },
@@ -85,13 +86,14 @@ function uploadAnalyse(file) {
                     attributes: { status, stats },
                   } = result.data;
                   if (status === "completed") {
-                    clearInterval(timer);
                     if (!isStatsCanPass(stats)) {
                       const fileHash = getFileHash(file);
-                      reject(`[安装包存在风险项，请检查安装包: https://www.virustotal.com/gui/file/${fileHash}/detection]`);
+                      reject(`[安装包存在风险项，请检查安装包: https://www.virustotal.com/gui/file/${fileHash}/detection]，analyseId：${analyseId}`);
                     } else {
                       resolve();
                     }
+                  } else if (status === 'failed')  {
+                    reject('文件解析失败，请重新检测')
                   }
                 })
                 .catch((error) => {
@@ -104,6 +106,9 @@ function uploadAnalyse(file) {
           })
           .catch((error) => {
             virusCheckErrorLog(error);
+          })
+          .finally(() => {
+            clearInterval(timer);
           })
         })
     })

@@ -92,8 +92,6 @@ function uploadAnalyse(file) {
                     } else {
                       resolve();
                     }
-                  } else if (status === 'failed')  {
-                    reject('文件解析失败，请重新检测')
                   }
                 })
                 .catch((error) => {

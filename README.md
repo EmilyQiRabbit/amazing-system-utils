@@ -11,3 +11,5 @@
    2. [git alias 配置](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/git-monkey/git-alias.md)
 
 5. [virustotal](https://developers.virustotal.com/v3.0/)：可用于检测安装包病毒，相见 [virustotal/README.md](./virustotal/README.md)
+
+6. 自动化骨架屏

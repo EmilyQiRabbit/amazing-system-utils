@@ -1,4 +1,4 @@
-### 目前收集到的工具有：
+### 目前收集到的工具包括：
 
 1. Hammerspoon：强大的 OS X 系统工具，详见 [hammerspoon/README](./hammerspoon/README.md)
 

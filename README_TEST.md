@@ -12,4 +12,4 @@
 
 5. [virustotal](https://developers.virustotal.com/v3.0/)：可用于检测安装包病毒，相见 [virustotal/README.md](./virustotal/README.md)
 
-6. 自动化骨架屏
+6. 自动化骨架屏 [page-skeleton-webpack-plugin](https://github.com/ElemeFE/page-skeleton-webpack-plugin)

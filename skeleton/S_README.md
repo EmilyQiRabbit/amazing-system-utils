@@ -5,3 +5,4 @@
 * Examples：
     * [sale page for skeleton plugin](https://github.com/ElemeFE/page-skeleton-webpack-plugin/tree/master/examples/sale)
     * [ResumeTemplate](https://github.com/EmilyQiRabbit/ResumeTemplate)
+* [配置方式](https://github.com/EmilyQiRabbit/ResumeTemplate/commit/eefb39ef56eebb23bd30bf8fc8f7e413beddbfce)

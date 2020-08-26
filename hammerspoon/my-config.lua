@@ -7,7 +7,7 @@ local key2AppRun = {
 local key2AppWindow_Cmd = {
     i = 'iTerm',
     o = 'Code',
-    t = 'To Do'
+    -- t = 'To Do'
 }
 local key2AppWindow_Control = {
   x = 'XMind',
@@ -56,11 +56,11 @@ hs.hotkey.bind(hyperControl, 'r', function()
     -- 大象 微信的布局修改
     local dxApp = hs.application.find('大象')
     if dxApp then
-        dxApp:mainWindow():move({500, 0, 1048, 950})
+        dxApp:mainWindow():move({524, 0, 1000, 800})
     end
     local wechatApp = hs.application.find('微信')
     if wechatApp then
-        wechatApp:mainWindow():move({606, 0, 835, 950})
+        wechatApp:mainWindow():move({606, 0, 835, 800})
     end
 end)
 

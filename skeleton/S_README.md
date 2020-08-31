@@ -15,7 +15,7 @@
 ### 自动生成方案
 * 通过 puppeteer​ 生成：
     * https://github.com/famanoder/dps 
-    * 考拉 https://github.com/kaola-fed/awesome-skeleton/blob/master/README-zh_CN.md
+    * https://github.com/kaola-fed/awesome-skeleton/blob/master/README-zh_CN.md
     * https://github.com/ElemeFE/page-skeleton-webpack-plugin/blob/master/docs/i18n/zh_cn.md
 
 

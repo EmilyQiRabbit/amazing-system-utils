@@ -15,3 +15,5 @@
 6. 自动化骨架屏 [page-skeleton-webpack-plugin](https://github.com/ElemeFE/page-skeleton-webpack-plugin) (Eleme 团队)
 
 7. Web Worker：JavaScript 多线程方案
+
+8. [window.performance 全揭秘](https://www.cnblogs.com/tugenhua0707/p/10982332.html)

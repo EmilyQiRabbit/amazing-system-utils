@@ -1,4 +1,6 @@
-### 目前收集到的工具包括：
+## 目前收集到的工具包括：
+
+### Public
 
 1. Hammerspoon：强大的 OS X 系统工具，详见 [hammerspoon/README](./hammerspoon/README.md)
 
@@ -17,3 +19,7 @@
 7. Web Worker：JavaScript 多线程方案
 
 8. [window.performance 全揭秘](https://www.cnblogs.com/tugenhua0707/p/10982332.html)
+
+### Self
+
+1. autoRefetch: 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。

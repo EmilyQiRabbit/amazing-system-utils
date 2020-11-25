@@ -22,4 +22,4 @@
 
 ### Self
 
-1. autoRefetch: 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。
+1. [autoRefetch](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/autoRefetch/autoRefetch.ts): 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。

@@ -1,8 +1,8 @@
 // 获取数据失败时，在 requestIdleCallback 中自动重试
-function autoRefetchOnfailed ({
+export function autoRefetchOnfailed ({
     sendRequest,
     params,
-    requestSuccess = (result) => true, // 用户不定义此项，则认为请求成功那么获取数据就成功了
+    requestSuccess = function (result) { return true }, // 用户不定义此项，则认为请求成功那么获取数据就成功了
     autoRefetch = true,
     timeout = 15000, // 如果不支持 requestIdleCallback，那么多少毫秒后自动重试
 }: {
@@ -24,7 +24,7 @@ function autoRefetchOnfailed ({
                 (window as any).cancelIdleCallback(handle);
             })
         } else {
-            const id = window.setTimeout(() => {
+            const id = window.setTimeout(function() {
                 autoRefetchOnfailed({
                     sendRequest,
                     params,
@@ -34,12 +34,12 @@ function autoRefetchOnfailed ({
             }, timeout)
         }
     }
-    return sendRequest(params).then((result) => {
+    return sendRequest(params).then(function(result){
         if (requestSuccess(result)) {
             autoRefetch && refetch();
         }
         return Promise.resolve(result);
-    }).catch((e) => {
+    }).catch(function(e) {
         autoRefetch && refetch();
         return Promise.reject(e);
     })

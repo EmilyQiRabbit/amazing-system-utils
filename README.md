@@ -22,4 +22,4 @@
 
 ### Self
 
-1. [autoRefetch](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/autoRefetch/autoRefetch.ts): 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。
+1. ~~[autoRefetch](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/autoRefetch/autoRefetch.ts): 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。~~ （疯了吧自己造轮子 🤪，有现成又好用的它不香吗？！参见 [p-retry](https://github.com/sindresorhus/p-retry)，呵呵）

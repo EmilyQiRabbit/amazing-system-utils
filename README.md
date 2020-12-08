@@ -20,6 +20,8 @@
 
 8. [window.performance 全揭秘](https://www.cnblogs.com/tugenhua0707/p/10982332.html)
 
+9. 资源离线化方案：[Hybrid App 离线包方案实践](https://juejin.cn/post/6844904031773523976) [极致的 Hybrid：航旅离线包再加速！](https://www.open-open.com/news/view/1cee25c)
+
 ### Self
 
 1. ~~[autoRefetch](https://github.com/EmilyQiRabbit/amazing-system-utils/blob/master/autoRefetch/autoRefetch.ts): 远端请求失败时，自动在 window.requestIdleCallback() 中重新拉取。~~ （疯了吧自己造轮子 🤪，有现成又好用的它不香吗？！参见 [p-retry](https://github.com/sindresorhus/p-retry)，呵呵）

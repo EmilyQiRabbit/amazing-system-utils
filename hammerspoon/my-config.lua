@@ -35,16 +35,16 @@ local timerStyle = {
   textSize = 35
 }
 -- 定时提醒
-local timerForHaveARest = hs.timer.new(60*55, function()
-  hs.alert.show('🌸 Take a break 🌸', timerStyle, hs.screen.mainScreen(), 5)
-  -- timerForHaveARest:stop()
-end)
+-- local timerForHaveARest = hs.timer.new(60*55, function()
+--   hs.alert.show('🌸 Take a break 🌸', timerStyle, hs.screen.mainScreen(), 5)
+--   -- timerForHaveARest:stop()
+-- end)
 
 -- 开始计时
-hs.hotkey.bind(hyperControl, 't', function()
-  hs.alert('🌸 今天也要加油鸭 🌸')
-  timerForHaveARest:start()
-end)
+-- hs.hotkey.bind(hyperControl, 't', function()
+--   hs.alert('🌸 今天也要加油鸭 🌸')
+--   timerForHaveARest:start()
+-- end)
 
 -- 测试按键
 -- hs.hotkey.bind(hyperControl, 'e', function()
@@ -52,7 +52,7 @@ end)
 -- end)
 
 -- 调整应用窗口位置：ctrl + r
-hs.hotkey.bind(hyperControl, 'r', function()
+hs.hotkey.bind({"shift", "ctrl"}, 'r', function()
     -- 大象 微信的布局修改
     local dxApp = hs.application.find('大象')
     if dxApp then
@@ -60,7 +60,7 @@ hs.hotkey.bind(hyperControl, 'r', function()
     end
     local wechatApp = hs.application.find('微信')
     if wechatApp then
-        wechatApp:mainWindow():move({606, 0, 835, 800})
+        wechatApp:mainWindow():move({524, 0, 1000, 800})
     end
 end)
 
@@ -121,12 +121,12 @@ hs.hotkey.bind({"shift", "ctrl"}, '`', function()
   if chromeApp then
       hs.alert('Shutting down Apps...')
       kill_all_applications({ codeApp, wechatApp, chromeApp, itermApp, dxApp })
-      timerForHaveARest:stop()
+      -- timerForHaveARest:stop()
       -- SafariWatcher:stop()
   else
       -- SafariWatcher:start()
-      launch_all_applications({ 'wechat', 'Google Chrome', 'iTerm', '大象' })
-      timerForHaveARest:start()
+      launch_all_applications({ 'wechat', 'Google Chrome', 'iTerm', '大象Nightly' })
+      -- timerForHaveARest:start()
   end
 
 end)

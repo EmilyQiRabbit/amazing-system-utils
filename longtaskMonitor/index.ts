@@ -1,4 +1,3 @@
-// 无依赖，临时版本，仅代码同步
 import EventEmitter from 'eventemitter3';
 
 type LoggerParams = {
@@ -22,7 +21,7 @@ export default class LongTaskObserver extends EventEmitter {
     private eventName: string = 'longtask';
     private records: PerformanceEntryList = [];
 
-    public isLongTasksSupported: boolean = this._isLongTasksSupported();
+    private isLongTasksSupported: boolean = this._isLongTasksSupported();
 
     private _isLongTasksSupported() {
         return 'PerformanceObserver' in window
@@ -43,6 +42,10 @@ export default class LongTaskObserver extends EventEmitter {
         const perfEntries = list.getEntries();
         // 广播长任务信息
         this.emit(this.eventName, perfEntries);
+    }
+
+    getLongTasksSupported = () => {
+        return this.isLongTasksSupported;
     }
 
     start = () => { // 业务封装

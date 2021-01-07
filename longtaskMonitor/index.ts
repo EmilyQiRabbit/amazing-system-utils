@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 
-type LoggerParams = {
+type ReporterParams = {
     name: string;
     duration: number;
     longtaskCount: number;
@@ -8,28 +8,19 @@ type LoggerParams = {
     originData: any;
 }
 
-type LoggerFunc = (params: LoggerParams) => void;
+type RepoterFunc = (params: ReporterParams) => void;
 
-const defaultLoggerFunc = (params: LoggerParams) => {
+const defaultReporter = (params: ReporterParams) => {
     console.log('long task monitor log:', params);
 }
 
-export default class LongTaskObserver extends EventEmitter {
+export default class LongTaskMonitor extends EventEmitter {
     private observer: PerformanceObserver;
-    private reporter: LoggerFunc;
-    // private debugFunc: LoggerFunc;
+    private reporter: RepoterFunc;
     private eventName: string = 'longtask';
     private records: PerformanceEntryList = [];
 
-    private isLongTasksSupported: boolean = this._isLongTasksSupported();
-
-    private _isLongTasksSupported() {
-        return 'PerformanceObserver' in window
-            && 'PerformanceLongTaskTiming' in window
-            && 'TaskAttributionTiming' in window
-    }
-
-    constructor(initParams: {reporter: LoggerFunc} = {reporter: defaultLoggerFunc}) {
+    constructor(initParams: {reporter: RepoterFunc} = {reporter: defaultReporter}) {
         super();
         const { reporter } = initParams;
         this.reporter = reporter;
@@ -44,9 +35,9 @@ export default class LongTaskObserver extends EventEmitter {
         this.emit(this.eventName, perfEntries);
     }
 
-    getLongTasksSupported = () => {
-        return this.isLongTasksSupported;
-    }
+    static isSupported = 'PerformanceObserver' in window
+        && 'PerformanceLongTaskTiming' in window
+        && 'TaskAttributionTiming' in window
 
     start = () => { // 业务封装
         this.records = [];

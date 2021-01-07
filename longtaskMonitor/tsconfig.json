@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "ES6",
+        "moduleResolution": "node",
+        "lib": ["es2018", "ES6", "DOM"],
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "pretty": true,
+        "baseUrl": ".",
+        "esModuleInterop": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true
+    },
+    "files": ["index.ts"]
+}

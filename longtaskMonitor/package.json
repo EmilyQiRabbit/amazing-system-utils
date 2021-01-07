@@ -1,0 +1,23 @@
+{
+  "name": "@xm/longtask-monitor",
+  "version": "1.0.3",
+  "description": "长任务监听工具",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc"
+  },
+  "keywords": [
+    "longtask",
+    "eventEmitter"
+  ],
+  "author": "dengyaolong, liuyuqi04",
+  "license": "MIT",
+  "dependencies": {
+    "eventemitter3": "^4.0.7"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.3"
+  }
+}

@@ -43,6 +43,7 @@ class TextExtraction {
                 let indexOfMatchedString = 0;
 
                 while (textLeft) {
+                    pattern.pattern.lastIndex = 0;
                     let matches = pattern.pattern.exec(textLeft);
 
                     if (!matches) {

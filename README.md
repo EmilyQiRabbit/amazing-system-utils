@@ -30,4 +30,4 @@
 
 2. 【MT】Longtask Monitor: 基于 [PerformanceObserver](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver)、[Long Tasks API](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API) 和 [eventemitter3](https://github.com/primus/eventemitter3) 的长任务监听工具。
 
-3. 【MT】FilterUrl
+3. 【MT】ParsedText

@@ -98,7 +98,6 @@ class TextExtraction {
 
 export interface ParsedTextProps {
     parse: {type?: 'url', pattern?: RegExp, renderText?: RenderText}[];
-    className?: string;
 }
 
 class ParsedText extends React.Component<ParsedTextProps> {
@@ -119,7 +118,7 @@ class ParsedText extends React.Component<ParsedTextProps> {
     }
 
     getParsedText() {
-        const {className, parse, children} = this.props;
+        const {parse, children} = this.props;
         if (!parse) {
             return children;
         }

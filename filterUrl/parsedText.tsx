@@ -8,7 +8,7 @@ export const PATTERNS = {
 
 type RenderText = (text: string, matches: RegExpExecArray) => React.ReactNode;
 
-interface Pattern {
+export interface Pattern {
     pattern: RegExp;
     renderText?: RenderText;
 }
@@ -96,7 +96,7 @@ class TextExtraction {
     }
 }
 
-interface ParsedTextProps {
+export interface ParsedTextProps {
     parse: {type?: 'url', pattern?: RegExp, renderText?: RenderText}[];
     className?: string;
 }
@@ -130,13 +130,8 @@ class ParsedText extends React.Component<ParsedTextProps> {
         const textExtraction = new TextExtraction(children, this.getPatterns());
 
         return textExtraction.parse().map((props, index) => {
-            return (
-                <span
-                    key={`parsedText-${index}`}
-                    className={className}
-                    {...props}
-                ></span>
-            );
+            // 直接返回 props.children，不需要增加额外的 dom 结构
+            return props.children;
         });
     }
 

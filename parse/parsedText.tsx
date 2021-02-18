@@ -1,16 +1,10 @@
 import React from 'react';
 
-export const PATTERNS = {
-    url: /(https?:\/\/|www\.)[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*[-a-zA-Z0-9@:%_\+~#?&\/=])*/i,
-    phone: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}/,
-    email: /\S+@\S+\.\S+/
-};
-
 type RenderText = (text: string, matches: RegExpExecArray) => React.ReactNode;
 
 export interface Pattern {
     pattern: RegExp;
-    renderText?: RenderText;
+    renderText: RenderText;
 }
 
 class TextExtraction {
@@ -97,25 +91,11 @@ class TextExtraction {
 }
 
 export interface ParsedTextProps {
-    parse: {type?: 'url', pattern?: RegExp, renderText?: RenderText}[];
+    parse: Pattern[];
 }
 
 class ParsedText extends React.Component<ParsedTextProps> {
     static displayName = 'ParsedText';
-
-    getPatterns() {
-        return this.props.parse.map(option => {
-            const {type, ...patternOption} = option;
-            if (type) {
-                if (!PATTERNS[type]) {
-                    throw new Error(`${option.type} is not a supported type`);
-                }
-                patternOption.pattern = PATTERNS[type];
-            }
-
-            return patternOption as {pattern: RegExp};
-        });
-    }
 
     getParsedText() {
         const {parse, children} = this.props;
@@ -126,9 +106,9 @@ class ParsedText extends React.Component<ParsedTextProps> {
             return children;
         }
 
-        const textExtraction = new TextExtraction(children, this.getPatterns());
+        const textExtraction = new TextExtraction(children, this.props.parse);
 
-        return textExtraction.parse().map((props, index) => {
+        return textExtraction.parse().map((props) => {
             // 直接返回 props.children，不需要增加额外的 dom 结构
             return props.children;
         });

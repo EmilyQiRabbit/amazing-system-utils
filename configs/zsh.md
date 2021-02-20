@@ -69,7 +69,6 @@ alias gla=_gla
 alias glm=_glm
 alias fdesc=_fdesc
 alias cc="code ."
-alias dst="NODE_DEVTOOL= npm start"
 alias nst="npm start"
 alias ccn="code .;npm start"
 alias npmi="npm install"
